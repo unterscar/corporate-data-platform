@@ -27,3 +27,15 @@
 Номер группы
 Текущий статус: разработка учебного прототипа.
 
+## Docker
+Первый сервис платформы контейнеризирован с помощью Docker.
+Для сборки образа используется команда:
+docker build -t corporate-data-app:2.0 ./app
+Для создания и запуска контейнера используется команда:
+docker run -d -p 8000:8000 --name corporate-data-container-v2 corporate-data-app:2.0
+После запуска сервис доступен по адресу:
+http://localhost:8000
+Для остановки контейнера используется команда:
+docker stop corporate-data-container-v2
+Для удаления остановленного контейнера используется команда:
+docker rm corporate-data-container-v2
