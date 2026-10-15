@@ -66,3 +66,6 @@ corporate-data-config
 corporate-data-deployment
 ```
 Итоговое количество экземпляров приложения: 2
+
+## CI/CD
+Для проекта используется автоматическая сборка Docker-образа с помощью GitHub Actions.
