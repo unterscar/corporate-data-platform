@@ -43,10 +43,16 @@ services:
     container_name: corporate-airflow
     depends_on:
       - db
+      - rustfs
     environment:
       AIRFLOW__CORE__LOAD_EXAMPLES: "false"
       AIRFLOW__CORE__DAGS_FOLDER: "/opt/airflow/dags"
       AIRFLOW__CORE__EXECUTOR: "LocalExecutor"
+
+      RUSTFS_ENDPOINT: "http://rustfs:9000"
+      RUSTFS_ACCESS_KEY: "rustfsadmin"
+      RUSTFS_SECRET_KEY: "rustfssecret123"
+      RUSTFS_PROCESSED_BUCKET: "corporate-processed"
 
       DB_HOST: "db"
       DB_PORT: "5432"
@@ -64,11 +70,30 @@ services:
 
     command: >
       bash -c "
-      pip install --no-cache-dir 'psycopg[binary]' &&
+      pip install --no-cache-dir 'psycopg[binary]' boto3 &&
       airflow standalone
       "
 
+  rustfs:
+    image: rustfs/rustfs:latest
+    container_name: corporate-rustfs
 
+    environment:
+      RUSTFS_ACCESS_KEY: rustfsadmin
+      RUSTFS_SECRET_KEY: rustfssecret123
+      RUSTFS_ADDRESS: "0.0.0.0:9000"
+      RUSTFS_CONSOLE_ADDRESS: "0.0.0.0:9001"
+      RUSTFS_CONSOLE_ENABLE: "true"
+
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+
+    volumes:
+      - rustfs_data:/data
+
+    command: /data
 
 volumes:
   postgres_data:
+  rustfs_data:
